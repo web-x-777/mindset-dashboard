@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Freedom Mindset Dashboard</title>
+  <style>
+    :root {
+      --bg1: #0a0a0f;
+      --bg2: #111827;
+      --accent: #00f5ff;
+      --accent2: #8b5cf6;
+      --good: #22c55e;
+      --avg: #eab308;
+      --weak: #ef4444;
+      --card: #0f172a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      transition: 0.4s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    .score {
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .level {
+      font-size: 1.5rem;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .beast {
+      font-size: 1.2rem;
+      margin-top: 5px;
+      color: #ccc;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 15px;
+      background: #1f2937;
+      border-radius: 10px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: 1s;
+    }
+
+    .recommendations li {
+      background: #020617;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 8px 0;
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideIn 0.5s forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+      background: #020617;
+      color: white;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    canvas {
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Financial Freedom Mindset Dashboard</h1>
+      <p>Discover your mindset level, your beast, and unlock your elite potential</p>
+    </header>
+    <div class="dashboard">
+      <div class="card">
+        <h2>Enter Your Score (5 - 20)</h2>
+        <input type="number" id="scoreInput" placeholder="Enter your score" min="5" max="20">
+        <button onclick="analyzeMindset()">Analyze Mindset</button>
+      </div>
+      <div class="card">
+        <h2>Your Result</h2>
+        <div class="score" id="scoreDisplay">0</div>
+        <div class="level" id="levelDisplay">Level: -</div>
+        <div class="beast" id="beastDisplay">Beast: -</div>
+        <div class="progress-bar">
+          <div class="progress" id="progress"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Mindset Chart</h2>
+        <canvas id="chart" width="300" height="300"></canvas>
+      </div>
+      <div class="card">
+        <h2>Personalized Recommendations</h2>
+        <ul class="recommendations" id="recommendations"></ul>
+      </div>
+    </div>
+    <div class="footer">
+      <p>Build Discipline. Build Skills. Build Freedom.</p>
+    </div>
+  </div>
+
+  <script>
+    function analyzeMindset() {
+      let score = parseInt(document.getElementById("scoreInput").value);
+      if (!score || score < 5 || score > 20) {
+        alert("Please enter a score between 5 and 20");
+        return;
+      }
+
+      let level, color, recs, beast, name;
+
+      if (score <= 8) {
+        level = "Weak"; color = "var(--weak)";
+        recs = ["Build strict daily discipline", "Reduce entertainment consumption", "Learn one income skill", "Surround yourself with growth people"];
+        beast = "Lion Cub – still learning, potential is there but needs growth";
+      } else if (score <= 12) {
+        level = "Average"; color = "var(--avg)";
+        recs = ["Start freelancing", "Invest in skill development", "Track habits daily", "Improve productivity"];
+        beast = "Wolf – smart, adaptable, starting to hunt for opportunities";
+      } else if (score <= 16) {
+        level = "Strong"; color = "var(--accent)";
+        recs = ["Build multiple income streams", "Master high value skills", "Create long-term plan", "Improve leadership"];
+        beast = "Tiger – strong, focused, dominant in its territory";
+      } else {
+        level = "Elite"; color = "var(--good)";
+        recs = ["Scale income globally", "Build assets", "Create systems", "Mentor others"];
+        beast = "Dragon – legendary, unstoppable, ultimate mastery";
+      }
+
+      // Update UI
+      document.getElementById("scoreDisplay").innerText = score;
+      document.getElementById("levelDisplay").innerText = "Level: " + level;
+      document.getElementById("levelDisplay").style.color = color;
+      document.getElementById("beastDisplay").innerText = "Beast: " + beast;
+
+      let progress = (score / 20) * 100;
+      document.getElementById("progress").style.width = progress + "%";
+
+      // Recommendations
+      let recList = document.getElementById("recommendations");
+      recList.innerHTML = "";
+      recs.forEach((rec, i) => {
+        let li = document.createElement("li");
+        li.innerText = rec;
+        li.style.animationDelay = (i * 0.2) + "s";
+        recList.appendChild(li);
+      });
+
+      drawPieChart(score, color);
+    }
+
+    function drawPieChart(score, color) {
+      let canvas = document.getElementById("chart");
+      let ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let centerX = canvas.width / 2;
+      let centerY = canvas.height / 2;
+      let radius = 100;
+      let startAngle = -0.5 * Math.PI;
+      let endAngle = startAngle + (score / 20) * 2 * Math.PI;
+
+      // Filled portion
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Remaining portion
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, endAngle, startAngle + 2 * Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = "#1f2937";
+      ctx.fill();
+
+      // Center text
+      ctx.fillStyle = "white";
+      ctx.font = "18px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(score + "/20", centerX, centerY);
+    }
+  </script>
+</body>
+
+</html>
